@@ -5,21 +5,28 @@ import java.util.List;
 public class UserDto {
     private long id;
     private String username;
+    private String password;
     private String email;
     private String phoneNumber;
     private CartDto cartDto;
     private List<OrderDto> orderDtos;
     public UserDto(
-            long id, String username, String email,
-            String phoneNumber, CartDto cartDto,
-            List<OrderDto> orderDtos
+            String username, String password,
+            String email,
+            String phoneNumber
     ){
-        this.id = id;
         this.username = username;
+        this.password = password;
         this.email = email;
         this.phoneNumber = phoneNumber;
-        this.cartDto = cartDto;
-        this.orderDtos = orderDtos;
+    }
+
+    public void setPassword(String password) {
+        this.password = password;
+    }
+
+    public String getPassword() {
+        return password;
     }
 
     public void setId(long id) {

@@ -12,7 +12,6 @@ public class User {
     private long id;
     private String username;
     private String password;
-    private String salt;
     private String email;
     @Column(name = "phone_number")
     private String phoneNumber;
@@ -22,28 +21,24 @@ public class User {
     private List<Order> orders;
 
     public User(){}
-    public User(String username, String password, String salt,
-                String email, String phoneNumber, Cart cart) {
+    public User(String username, String password,
+                String email, String phoneNumber) {
         this.username = username;
         this.password = password;
-        this.salt = salt;
         this.email = email;
         this.phoneNumber = phoneNumber;
-        this.cart  =cart;
     }
-    public User(String username, String password, String salt,
-                String email, Cart cart) {
+    public User(String username, String password,
+                String email) {
         this.username = username;
         this.password = password;
-        this.salt = salt;
         this.email = email;
-        this.cart  =cart;
     }
 
     public static User CREATEACCOUNTWITHOUTPHONENUMBER(String username, String password, String salt,
-                                                       String email, Cart cart) {
+                                                       String email) {
         return new User(username, password, salt,
-                email, cart);
+                email);
     }
 
     public void addOrder(Order order) {
@@ -58,9 +53,6 @@ public class User {
         this.password = password;
     }
 
-    public void setSalt(String salt) {
-        this.salt = salt;
-    }
 
     public void setEmail(String email) {
         this.email = email;
@@ -88,10 +80,6 @@ public class User {
 
     public String getPassword() {
         return password;
-    }
-
-    public String getSalt() {
-        return salt;
     }
 
     public String getEmail() {
