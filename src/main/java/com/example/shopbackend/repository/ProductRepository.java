@@ -1,4 +1,4 @@
-package com.example.shopbackend.service;
+package com.example.shopbackend.repository;
 
 import com.example.shopbackend.model.Product;
 import org.springframework.data.jpa.repository.JpaRepository;

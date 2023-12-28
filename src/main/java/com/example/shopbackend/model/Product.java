@@ -14,7 +14,7 @@ public class Product {
     private String description;
     private double price;
     private int quantity;
-    private int total_view;
+    private int totalView;
     @ManyToOne
     @JoinColumn(name = "category_id", referencedColumnName = "id")
     private Category category;
@@ -31,7 +31,7 @@ public class Product {
         this.description = description;
         this.price = price;
         this.quantity = quantity;
-        this.total_view = total_view;
+        this.totalView = total_view;
         this.category = category;
     }
 
@@ -63,8 +63,8 @@ public class Product {
         this.quantity = quantity;
     }
 
-    public void setTotal_view(int total_view) {
-        this.total_view = total_view;
+    public void setTotalView(int totalView) {
+        this.totalView = totalView;
     }
 
     public void setCategory(Category category) {
@@ -91,8 +91,8 @@ public class Product {
         return quantity;
     }
 
-    public int getTotal_view() {
-        return total_view;
+    public int getTotalView() {
+        return totalView;
     }
 
     public Category getCategory() {

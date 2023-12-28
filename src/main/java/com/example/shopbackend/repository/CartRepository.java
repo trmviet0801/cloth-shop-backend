@@ -1,6 +1,5 @@
-package com.example.shopbackend.service;
+package com.example.shopbackend.repository;
 
-import com.example.shopbackend.dto.CartDto;
 import com.example.shopbackend.model.Cart;
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.stereotype.Repository;
