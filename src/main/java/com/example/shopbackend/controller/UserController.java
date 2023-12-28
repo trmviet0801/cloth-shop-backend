@@ -1,6 +1,8 @@
 package com.example.shopbackend.controller;
 
 import com.example.shopbackend.dto.UserDto;
+import com.example.shopbackend.exception.DuplicatedUser;
+import com.example.shopbackend.exception.NotContainRequiredData;
 import com.example.shopbackend.model.User;
 import com.example.shopbackend.service.UserService;
 import com.example.shopbackend.util.Convert;
@@ -24,9 +26,10 @@ public class UserController {
         this.userService = userService;
     }
     @PostMapping
-    public ResponseEntity<UserDto> createUser(@RequestBody UserDto userDto) throws NoSuchAlgorithmException {
+    public ResponseEntity<UserDto> createUser(@RequestBody UserDto userDto) throws NotContainRequiredData, DuplicatedUser {
         User savedUser = userService.saveUser(userDto);
         UserDto result = Convert.UserToDto(savedUser);
+        result.setPassword(null);
         return ResponseEntity.ok()
                 .body(result);
     }
