@@ -7,13 +7,14 @@ import com.example.shopbackend.model.User;
 import com.example.shopbackend.repository.UserRepository;
 import com.example.shopbackend.service.UserService;
 import com.example.shopbackend.util.Convert;
+import com.example.shopbackend.util.Role;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.annotation.Bean;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 
-import java.util.Optional;
+import java.util.*;
 
 @Service
 public class UserServiceImp implements UserService {
@@ -30,7 +31,7 @@ public class UserServiceImp implements UserService {
             throw new NotContainRequiredData("Do not contain required data to create new user");
         } else {
             User user = Convert.DtoToUser(userDto);
-            user.setPassword(encoder().encode(user.getPassword()));
+            user.setPassword("{bcrypt}" + encoder().encode(user.getPassword()));
             if (findByUsername(user.getUsername()).isPresent()) {
                 throw new DuplicatedUser("Duplicated username");
             } else if (findByEmail(user.getEmail()).isPresent()){
@@ -38,6 +39,7 @@ public class UserServiceImp implements UserService {
             } else if (findByPhoneNumber(user.getPhoneNumber()).isPresent()) {
                 throw new DuplicatedUser("Duplicated phone number");
             } else {
+                user.setRole(Role.USER.name());
                 return userRepository.save(user);
             }
         }

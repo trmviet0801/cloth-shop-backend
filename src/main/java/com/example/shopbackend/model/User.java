@@ -1,8 +1,11 @@
 package com.example.shopbackend.model;
 
+import com.example.shopbackend.util.Role;
 import jakarta.persistence.*;
 
+import java.util.EnumSet;
 import java.util.List;
+import java.util.Set;
 
 @Entity
 @Table(name = "user")
@@ -19,6 +22,8 @@ public class User {
     private Cart cart;
     @OneToMany(mappedBy = "user")
     private List<Order> orders;
+    @Column(name = "role")
+    private String role;
 
     public User(){}
     public User(String username, String password,
@@ -39,6 +44,14 @@ public class User {
                                                        String email) {
         return new User(username, password, salt,
                 email);
+    }
+
+    public void setRole(String role) {
+        this.role = role;
+    }
+
+    public String getRole() {
+        return role;
     }
 
     public void addOrder(Order order) {
