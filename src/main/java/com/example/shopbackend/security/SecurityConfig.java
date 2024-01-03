@@ -3,6 +3,7 @@ package com.example.shopbackend.security;
 import com.example.shopbackend.util.Role;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
+import org.springframework.http.HttpMethod;
 import org.springframework.security.config.Customizer;
 import org.springframework.security.config.annotation.web.builders.HttpSecurity;
 import org.springframework.security.config.annotation.web.configurers.AbstractHttpConfigurer;
@@ -26,7 +27,8 @@ public class SecurityConfig {
         httpSecurity.csrf(AbstractHttpConfigurer::disable)
                 .authorizeHttpRequests((authorize) ->
                         authorize
-                        .anyRequest().hasAuthority(Role.USER.name()))
+                                .requestMatchers(HttpMethod.POST, "/user").permitAll()
+                                .anyRequest().hasAuthority(Role.USER.name()))
                 .httpBasic(Customizer.withDefaults());
         return httpSecurity.build();
     }

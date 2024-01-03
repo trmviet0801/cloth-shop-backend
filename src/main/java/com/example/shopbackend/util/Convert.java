@@ -11,10 +11,12 @@ public class Convert {
                 userDto.getEmail(),
                 userDto.getPhoneNumber()
         );
+        user.setId(userDto.getId());
         return user;
     }
     public static UserDto UserToDto(User user) {
         UserDto userDto = new UserDto(
+                user.getId(),
                 user.getUsername(),
                 user.getPassword(),
                 user.getEmail(),

@@ -1,5 +1,7 @@
 package com.example.shopbackend.dto;
 
+import jakarta.persistence.Column;
+
 import java.util.List;
 
 public class UserDto {
@@ -11,6 +13,7 @@ public class UserDto {
     private CartDto cartDto;
     private List<OrderDto> orderDtos;
     public UserDto(
+            long id,
             String username, String password,
             String email,
             String phoneNumber
@@ -19,7 +22,10 @@ public class UserDto {
         this.password = password;
         this.email = email;
         this.phoneNumber = phoneNumber;
+        this.id = id;
     }
+
+    public UserDto(){}
 
     public void setPassword(String password) {
         this.password = password;

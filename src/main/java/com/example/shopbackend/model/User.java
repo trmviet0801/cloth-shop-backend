@@ -13,10 +13,12 @@ public class User {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private long id;
+    @Column(name = "username", unique = true)
     private String username;
     private String password;
+    @Column(name = "email", unique = true)
     private String email;
-    @Column(name = "phone_number")
+    @Column(name = "phone_number", unique = true)
     private String phoneNumber;
     @OneToOne(mappedBy = "user")
     private Cart cart;
@@ -44,6 +46,10 @@ public class User {
                                                        String email) {
         return new User(username, password, salt,
                 email);
+    }
+
+    public void setId(long id) {
+        this.id = id;
     }
 
     public void setRole(String role) {

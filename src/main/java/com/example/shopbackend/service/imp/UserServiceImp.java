@@ -32,16 +32,18 @@ public class UserServiceImp implements UserService {
         } else {
             User user = Convert.DtoToUser(userDto);
             user.setPassword("{bcrypt}" + encoder().encode(user.getPassword()));
-            if (findByUsername(user.getUsername()).isPresent()) {
-                throw new DuplicatedUser("Duplicated username");
-            } else if (findByEmail(user.getEmail()).isPresent()){
-                throw new DuplicatedUser("Duplicated email");
-            } else if (findByPhoneNumber(user.getPhoneNumber()).isPresent()) {
-                throw new DuplicatedUser("Duplicated phone number");
-            } else {
-                user.setRole(Role.USER.name());
-                return userRepository.save(user);
-            }
+//            if (findByUsername(user.getUsername()).isPresent()) {
+//                throw new DuplicatedUser("Duplicated username");
+//            } else if (findByEmail(user.getEmail()).isPresent()){
+//                throw new DuplicatedUser("Duplicated email");
+//            } else if (findByPhoneNumber(user.getPhoneNumber()).isPresent()) {
+//                throw new DuplicatedUser("Duplicated phone number");
+//            } else {
+//                user.setRole(Role.USER.name());
+//                return userRepository.save(user);
+//            }
+            user.setRole(Role.USER.name());
+            return userRepository.save(user);
         }
     }
 
@@ -58,6 +60,14 @@ public class UserServiceImp implements UserService {
     @Override
     public Optional<User> findByPhoneNumber(String phoneNumber) {
         return userRepository.findByPhoneNumber(phoneNumber);
+    }
+
+    @Override
+    public User updateUser(UserDto userDto) {
+        User user = Convert.DtoToUser(userDto);
+        user.setPassword("{bcrypt}" + encoder().encode(user.getPassword()));
+        user.setRole(Role.USER.name());
+        return userRepository.save(user);
     }
 
     @Bean
