@@ -25,7 +25,8 @@ public class UserController {
         this.userService = userService;
     }
     @PostMapping
-    public ResponseEntity<UserDto> createUser(@RequestBody UserDto userDto) throws NotContainRequiredData, DuplicatedUser {
+    public ResponseEntity<UserDto> createUser(@RequestBody UserDto userDto)
+            throws NotContainRequiredData, DuplicatedUser {
         User savedUser = userService.saveUser(userDto);
         UserDto result = Convert.UserToDto(savedUser);
         result.setPassword(null);

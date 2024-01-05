@@ -32,18 +32,24 @@ public class UserServiceImp implements UserService {
         } else {
             User user = Convert.DtoToUser(userDto);
             user.setPassword("{bcrypt}" + encoder().encode(user.getPassword()));
-//            if (findByUsername(user.getUsername()).isPresent()) {
-//                throw new DuplicatedUser("Duplicated username");
-//            } else if (findByEmail(user.getEmail()).isPresent()){
-//                throw new DuplicatedUser("Duplicated email");
-//            } else if (findByPhoneNumber(user.getPhoneNumber()).isPresent()) {
-//                throw new DuplicatedUser("Duplicated phone number");
-//            } else {
-//                user.setRole(Role.USER.name());
-//                return userRepository.save(user);
-//            }
+            checkDuplicatedUser(user);
             user.setRole(Role.USER.name());
             return userRepository.save(user);
+        }
+    }
+
+    public void checkDuplicatedUser(User user) throws DuplicatedUser {
+        String username = user.getUsername();
+        String email = user.getEmail();
+        String phoneNumber = user.getPhoneNumber();
+        if (findByUsername(username).isPresent()) {
+            throw new DuplicatedUser("Duplicated username");
+        }
+        if (findByEmail(email).isPresent()) {
+            throw new DuplicatedUser("Duplicated email");
+        }
+        if (findByPhoneNumber(phoneNumber).isPresent()) {
+            throw new DuplicatedUser("Duplicated phone number");
         }
     }
 
