@@ -5,7 +5,7 @@ import com.example.shopbackend.exception.NotContainRequiredData;
 import com.example.shopbackend.model.User;
 
 public class Convert {
-    public static User DtoToUser(UserDto userDto) throws NotContainRequiredData {
+    public static User DtoToUser(UserDto userDto) {
         String username = userDto.getUsername();
         String password = userDto.getPassword();
         String email = userDto.getEmail();
@@ -18,15 +18,18 @@ public class Convert {
                 phoneNumber
         );
         user.setId(userDto.getId());
+        user.setRole(userDto.getRole());
         return user;
     }
     public static UserDto UserToDto(User user) {
-        return new UserDto(
-                user.getId(),
+        UserDto userDto = new UserDto(
                 user.getUsername(),
                 user.getPassword(),
                 user.getEmail(),
                 user.getPhoneNumber()
         );
+        userDto.setRole(user.getRole());
+        userDto.setId(user.getId());
+        return userDto;
     }
 }

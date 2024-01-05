@@ -12,8 +12,8 @@ public class UserDto {
     private String phoneNumber;
     private CartDto cartDto;
     private List<OrderDto> orderDtos;
+    private String role;
     public UserDto(
-            long id,
             String username, String password,
             String email,
             String phoneNumber
@@ -22,10 +22,17 @@ public class UserDto {
         this.password = password;
         this.email = email;
         this.phoneNumber = phoneNumber;
-        this.id = id;
     }
 
     public UserDto(){}
+
+    public String getRole() {
+        return role;
+    }
+
+    public void setRole(String role) {
+        this.role = role;
+    }
 
     public void setPassword(String password) {
         this.password = password;

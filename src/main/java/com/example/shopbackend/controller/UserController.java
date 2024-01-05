@@ -8,12 +8,9 @@ import com.example.shopbackend.model.User;
 import com.example.shopbackend.service.UserService;
 import com.example.shopbackend.util.Convert;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.context.annotation.Bean;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
-import java.security.NoSuchAlgorithmException;
-import java.security.SecureRandom;
 import java.util.Optional;
 
 @RestController
@@ -33,6 +30,20 @@ public class UserController {
         return ResponseEntity.ok()
                 .body(result);
     }
+
+    @PutMapping
+    public ResponseEntity<UserDto> updateUser(@RequestBody UserDto userDto) throws UserNotFound,
+            NotContainRequiredData, DuplicatedUser {
+        Optional<User> user = userService.findByUsername(userDto.getUsername());
+        if (user.isPresent()) {
+            User savedUser = userService.updateUser(userDto);
+            return ResponseEntity
+                    .ok()
+                    .body(Convert.UserToDto(savedUser));
+        }
+        throw new UserNotFound("User not found");
+    }
+
     @PutMapping("password")
     public ResponseEntity<UserDto> changePassword(@RequestBody UserDto userDto)
             throws UserNotFound, NotContainRequiredData {
@@ -40,7 +51,7 @@ public class UserController {
         if (user.isPresent()) {
            UserDto userDTO = Convert.UserToDto(user.get());
            userDTO.setPassword(userDto.getPassword());
-           User updatedUser = userService.updateUser(userDTO);
+           User updatedUser = userService.updatePassword(userDTO);
            return ResponseEntity.ok()
                    .body(Convert.UserToDto(updatedUser));
         }

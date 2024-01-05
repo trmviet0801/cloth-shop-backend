@@ -3,6 +3,7 @@ package com.example.shopbackend.service.imp;
 import com.example.shopbackend.dto.UserDto;
 import com.example.shopbackend.exception.DuplicatedUser;
 import com.example.shopbackend.exception.NotContainRequiredData;
+import com.example.shopbackend.exception.UserNotFound;
 import com.example.shopbackend.model.User;
 import com.example.shopbackend.repository.UserRepository;
 import com.example.shopbackend.service.UserService;
@@ -38,18 +39,30 @@ public class UserServiceImp implements UserService {
         }
     }
 
-    public void checkDuplicatedUser(User user) throws DuplicatedUser, NotContainRequiredData {
+    public void checkDuplicatedUser(User user) throws DuplicatedUser {
         String username = user.getUsername();
         String email = user.getEmail();
         String phoneNumber = user.getPhoneNumber();
-        if (findByUsername(username).isPresent()) {
-            throw new DuplicatedUser("Duplicated username");
+        long id = user.getId();
+
+        Optional<User> userFindByUsername = findByUsername(username);
+        Optional<User> userFindByEmail = findByEmail(email);
+        Optional<User> userFindByPhoneNumber = findByPhoneNumber(phoneNumber);
+
+        if (userFindByUsername.isPresent()) {
+            if (id != userFindByUsername.get().getId()) {
+                throw new DuplicatedUser("Duplicated username");
+            }
         }
-        if (findByEmail(email).isPresent()) {
-            throw new DuplicatedUser("Duplicated email");
+        if (userFindByEmail.isPresent()) {
+            if (id != userFindByEmail.get().getId()) {
+                throw new DuplicatedUser("Duplicated email");
+            }
         }
-        if (findByPhoneNumber(phoneNumber).isPresent()) {
-            throw new DuplicatedUser("Duplicated phone number");
+        if (userFindByPhoneNumber.isPresent()) {
+            if (id != userFindByPhoneNumber.get().getId()) {
+                throw new DuplicatedUser("Duplicated phone number");
+            }
         }
     }
 
@@ -69,7 +82,19 @@ public class UserServiceImp implements UserService {
     }
 
     @Override
-    public User updateUser(UserDto userDto) throws NotContainRequiredData {
+    public User updateUser(UserDto userDto) throws UserNotFound, DuplicatedUser {
+        User user = Convert.DtoToUser(userDto);
+        Optional<User> databaseUser = findByUsername(user.getUsername());
+        if (databaseUser.isPresent()) {
+            user.setPassword(databaseUser.get().getPassword());
+            checkDuplicatedUser(user);
+            return userRepository.save(user);
+        }
+        throw new UserNotFound("User not found");
+    }
+
+    @Override
+    public User updatePassword(UserDto userDto) throws NotContainRequiredData {
         User user = Convert.DtoToUser(userDto);
         user.setPassword("{bcrypt}" + encoder().encode(user.getPassword()));
         user.setRole(Role.USER.name());
