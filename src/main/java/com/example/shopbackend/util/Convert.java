@@ -21,13 +21,12 @@ public class Convert {
         return user;
     }
     public static UserDto UserToDto(User user) {
-        UserDto userDto = new UserDto(
+        return new UserDto(
                 user.getId(),
                 user.getUsername(),
                 user.getPassword(),
                 user.getEmail(),
                 user.getPhoneNumber()
         );
-        return userDto;
     }
 }
