@@ -12,5 +12,5 @@ public interface UserService {
     Optional<User> findByUsername(String username);
     Optional<User> findByEmail(String email);
     Optional<User> findByPhoneNumber(String PhoneNumber);
-    User updateUser(UserDto userDto);
+    User updateUser(UserDto userDto) throws NotContainRequiredData;
 }

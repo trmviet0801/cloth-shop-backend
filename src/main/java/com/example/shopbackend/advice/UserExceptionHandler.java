@@ -16,9 +16,9 @@ public class UserExceptionHandler {
     public ResponseEntity<UserErrorResponse> handlerUserException(NotContainRequiredData exception) {
         UserErrorResponse err = new UserErrorResponse();
         err.setMessage(exception.getMessage());
-        err.setStatus(HttpStatus.UNPROCESSABLE_ENTITY);
+        err.setStatus(HttpStatus.BAD_REQUEST);
         err.setTimestamp(System.currentTimeMillis());
-        return new ResponseEntity<>(err, HttpStatus.UNPROCESSABLE_ENTITY);
+        return new ResponseEntity<>(err, HttpStatus.BAD_REQUEST);
     }
 
     @ExceptionHandler

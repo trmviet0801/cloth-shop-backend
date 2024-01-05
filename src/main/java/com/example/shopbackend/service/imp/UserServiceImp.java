@@ -38,7 +38,7 @@ public class UserServiceImp implements UserService {
         }
     }
 
-    public void checkDuplicatedUser(User user) throws DuplicatedUser {
+    public void checkDuplicatedUser(User user) throws DuplicatedUser, NotContainRequiredData {
         String username = user.getUsername();
         String email = user.getEmail();
         String phoneNumber = user.getPhoneNumber();
@@ -69,7 +69,7 @@ public class UserServiceImp implements UserService {
     }
 
     @Override
-    public User updateUser(UserDto userDto) {
+    public User updateUser(UserDto userDto) throws NotContainRequiredData {
         User user = Convert.DtoToUser(userDto);
         user.setPassword("{bcrypt}" + encoder().encode(user.getPassword()));
         user.setRole(Role.USER.name());

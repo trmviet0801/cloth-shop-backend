@@ -35,7 +35,7 @@ public class UserController {
     }
     @PutMapping("password")
     public ResponseEntity<UserDto> changePassword(@RequestBody UserDto userDto)
-            throws UserNotFound {
+            throws UserNotFound, NotContainRequiredData {
         Optional<User> user = userService.findByUsername(userDto.getUsername());
         if (user.isPresent()) {
            UserDto userDTO = Convert.UserToDto(user.get());
