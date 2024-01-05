@@ -26,6 +26,8 @@ public class User {
     private List<Order> orders;
     @Column(name = "role")
     private String role;
+    @OneToOne(mappedBy = "user")
+    private Refund refund;
 
     public User(){}
     public User(String username, String password,
@@ -46,6 +48,14 @@ public class User {
                                                        String email) {
         return new User(username, password, salt,
                 email);
+    }
+
+    public Refund getRefund() {
+        return refund;
+    }
+
+    public void setRefund(Refund refund) {
+        this.refund = refund;
     }
 
     public void setId(long id) {

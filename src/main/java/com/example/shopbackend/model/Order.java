@@ -3,7 +3,7 @@ package com.example.shopbackend.model;
 import jakarta.persistence.*;
 
 @Entity
-@Table(name = "order")
+@Table(name = "`order`")
 public class Order {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
@@ -15,9 +15,11 @@ public class Order {
     @Column(name = "phone_number")
     private String phoneNumber;
     private String status;
-    @ManyToOne()
+    @ManyToOne
     @JoinColumn(name = "user_id", referencedColumnName = "id")
     private User user;
+    @OneToOne(mappedBy = "order")
+    private Refund refund;
 
     public Order(){}
     public Order(int quantity, double totalPrice, String address,
@@ -31,6 +33,18 @@ public class Order {
 
     public void setQuantity(int quantity) {
         this.quantity = quantity;
+    }
+
+    public void setId(long id) {
+        this.id = id;
+    }
+
+    public Refund getRefund() {
+        return refund;
+    }
+
+    public void setRefund(Refund refund) {
+        this.refund = refund;
     }
 
     public void setTotalPrice(double totalPrice) {
