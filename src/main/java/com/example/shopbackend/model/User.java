@@ -2,6 +2,8 @@ package com.example.shopbackend.model;
 
 import com.example.shopbackend.util.Role;
 import jakarta.persistence.*;
+import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
+import org.springframework.security.crypto.password.PasswordEncoder;
 
 import java.util.EnumSet;
 import java.util.List;
@@ -48,6 +50,14 @@ public class User {
                                                        String email) {
         return new User(username, password, salt,
                 email);
+    }
+
+    public void encryptPassword() {
+        setPassword("{bcrypt}" + encoder().encode(getPassword()));
+    }
+
+    public PasswordEncoder encoder() {
+        return new BCryptPasswordEncoder();
     }
 
     public Refund getRefund() {

@@ -2,7 +2,6 @@ package com.example.shopbackend.service.imp;
 
 import com.example.shopbackend.dto.UserDto;
 import com.example.shopbackend.exception.DuplicatedUser;
-import com.example.shopbackend.exception.NotContainRequiredData;
 import com.example.shopbackend.exception.UserNotFound;
 import com.example.shopbackend.model.User;
 import com.example.shopbackend.repository.UserRepository;
@@ -28,7 +27,7 @@ public class UserServiceImp implements UserService {
     @Override
     public User checkDuplicateSaveUser(UserDto userDto) throws DuplicatedUser {
         User user = Convert.DtoToUser(userDto);
-        user = encryptPassword(user);
+        user.encryptPassword();
         checkDuplicatedUser(user);
         user.setRole(Role.USER.name());
         return userRepository.save(user);
@@ -43,6 +42,7 @@ public class UserServiceImp implements UserService {
         user.setPassword("{bcrypt}" + encoder().encode(user.getPassword()));
         return user;
     }
+
 
     public void checkDuplicatedUser(User user) throws DuplicatedUser {
         String username = user.getUsername();
@@ -84,13 +84,13 @@ public class UserServiceImp implements UserService {
     }
 
     @Override
-    public User changePassword(UserDto userDto) throws UserNotFound{
+    public User changeUserPassword(UserDto userDto) throws UserNotFound{
         Optional<User> userFromDatabase = findById(userDto.getId());
         if (userFromDatabase.isPresent() && isEqualWithDatabaseUser(userDto)) {
             String newPass = userDto.getPassword();
             User currentUser = userFromDatabase.get();
             currentUser.setPassword(newPass);
-            currentUser = encryptPassword(currentUser);
+            currentUser.encryptPassword();
             userRepository.save(currentUser);
             return currentUser;
         }

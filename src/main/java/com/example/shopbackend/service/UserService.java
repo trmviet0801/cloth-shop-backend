@@ -15,5 +15,5 @@ public interface UserService {
     Optional<User> findByPhoneNumber(String PhoneNumber);
     Optional<User> findById(long id);
     User updateUser(UserDto userDto) throws UserNotFound, NotContainRequiredData, DuplicatedUser;
-    User changePassword(UserDto userDto) throws UserNotFound;
+    User changeUserPassword(UserDto userDto) throws UserNotFound;
 }
