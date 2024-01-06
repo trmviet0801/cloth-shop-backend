@@ -9,10 +9,9 @@ import com.example.shopbackend.model.User;
 import java.util.Optional;
 
 public interface UserService {
-    User saveUser(UserDto user) throws NotContainRequiredData, DuplicatedUser;
+    User checkDuplicateSaveUser(UserDto user) throws NotContainRequiredData, DuplicatedUser;
     Optional<User> findByUsername(String username);
     Optional<User> findByEmail(String email);
     Optional<User> findByPhoneNumber(String PhoneNumber);
-    User updatePassword(UserDto userDto) throws NotContainRequiredData;
     User updateUser(UserDto userDto) throws UserNotFound, NotContainRequiredData, DuplicatedUser;
 }

@@ -24,7 +24,7 @@ public class UserController {
     @PostMapping
     public ResponseEntity<UserDto> createUser(@RequestBody UserDto userDto)
             throws NotContainRequiredData, DuplicatedUser {
-        User savedUser = userService.saveUser(userDto);
+        User savedUser = userService.checkDuplicateSaveUser(userDto);
         UserDto result = Convert.UserToDto(savedUser);
         result.setPassword(null);
         return ResponseEntity.ok()
@@ -42,19 +42,5 @@ public class UserController {
                     .body(Convert.UserToDto(savedUser));
         }
         throw new UserNotFound("User not found");
-    }
-
-    @PutMapping("password")
-    public ResponseEntity<UserDto> changePassword(@RequestBody UserDto userDto)
-            throws UserNotFound, NotContainRequiredData {
-        Optional<User> user = userService.findByUsername(userDto.getUsername());
-        if (user.isPresent()) {
-           UserDto userDTO = Convert.UserToDto(user.get());
-           userDTO.setPassword(userDto.getPassword());
-           User updatedUser = userService.updatePassword(userDTO);
-           return ResponseEntity.ok()
-                   .body(Convert.UserToDto(updatedUser));
-        }
-        throw new UserNotFound("User Not Found");
     }
 }

@@ -19,24 +19,29 @@ import java.util.*;
 
 @Service
 public class UserServiceImp implements UserService {
-    private UserRepository userRepository;
+    private final UserRepository userRepository;
     @Autowired
     public UserServiceImp(UserRepository userRepository) {
         this.userRepository = userRepository;
     }
 
     @Override
-    public User saveUser(UserDto userDto) throws NotContainRequiredData, DuplicatedUser {
-        if (userDto.getUsername().isEmpty() || userDto.getPassword().isEmpty()
-        || userDto.getEmail().isEmpty() || userDto.getPhoneNumber().isEmpty()) {
-            throw new NotContainRequiredData("Do not contain required data to create new user");
-        } else {
-            User user = Convert.DtoToUser(userDto);
-            user.setPassword("{bcrypt}" + encoder().encode(user.getPassword()));
-            checkDuplicatedUser(user);
-            user.setRole(Role.USER.name());
-            return userRepository.save(user);
-        }
+    public User checkDuplicateSaveUser(UserDto userDto) throws DuplicatedUser {
+        User user = Convert.DtoToUser(userDto);
+        user = encryptPassword(user);
+        checkDuplicatedUser(user);
+        user.setRole(Role.USER.name());
+        return userRepository.save(user);
+    }
+
+    @Bean
+    public PasswordEncoder encoder() {
+        return new BCryptPasswordEncoder();
+    }
+
+    public User encryptPassword(User user) {
+        user.setPassword("{bcrypt}" + encoder().encode(user.getPassword()));
+        return user;
     }
 
     public void checkDuplicatedUser(User user) throws DuplicatedUser {
@@ -91,18 +96,5 @@ public class UserServiceImp implements UserService {
             return userRepository.save(user);
         }
         throw new UserNotFound("User not found");
-    }
-
-    @Override
-    public User updatePassword(UserDto userDto) throws NotContainRequiredData {
-        User user = Convert.DtoToUser(userDto);
-        user.setPassword("{bcrypt}" + encoder().encode(user.getPassword()));
-        user.setRole(Role.USER.name());
-        return userRepository.save(user);
-    }
-
-    @Bean
-    public PasswordEncoder encoder() {
-        return new BCryptPasswordEncoder();
     }
 }
