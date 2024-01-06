@@ -26,7 +26,6 @@ public class UserController {
             throws NotContainRequiredData, DuplicatedUser {
         User savedUser = userService.checkDuplicateSaveUser(userDto);
         UserDto result = Convert.UserToDto(savedUser);
-        result.setPassword(null);
         return ResponseEntity.ok()
                 .body(result);
     }
@@ -42,5 +41,12 @@ public class UserController {
                     .body(Convert.UserToDto(savedUser));
         }
         throw new UserNotFound("User not found");
+    }
+    @PutMapping("password")
+    public ResponseEntity<UserDto> changePassword(@RequestBody UserDto userDto) throws UserNotFound {
+        User user = userService.changePassword(userDto);
+        return ResponseEntity
+                .ok()
+                .body(Convert.UserToDto(user));
     }
 }

@@ -72,6 +72,50 @@ public class UserServiceImp implements UserService {
     }
 
     @Override
+    public User updateUser(UserDto userDto) throws UserNotFound, DuplicatedUser {
+        User user = Convert.DtoToUser(userDto);
+        Optional<User> databaseUser = findByUsername(user.getUsername());
+        if (databaseUser.isPresent()) {
+            user.setPassword(databaseUser.get().getPassword());
+            checkDuplicatedUser(user);
+            return userRepository.save(user);
+        }
+        throw new UserNotFound("User not found");
+    }
+
+    @Override
+    public User changePassword(UserDto userDto) throws UserNotFound{
+        Optional<User> userFromDatabase = findById(userDto.getId());
+        if (userFromDatabase.isPresent() && isEqualWithDatabaseUser(userDto)) {
+            String newPass = userDto.getPassword();
+            User currentUser = userFromDatabase.get();
+            currentUser.setPassword(newPass);
+            currentUser = encryptPassword(currentUser);
+            userRepository.save(currentUser);
+            return currentUser;
+        }
+        throw new UserNotFound("User not found");
+    }
+
+    public boolean isEqualWithDatabaseUser(UserDto userDto) {
+        Optional<User> databaseUser = userRepository.findByUsername(userDto.getUsername());
+        if (databaseUser.isPresent()) {
+            String username = userDto.getUsername();
+            String databaseUsername = databaseUser.get().getUsername();
+            long userId = userDto.getId();
+            long databaseUserId = databaseUser.get().getId();
+            String phoneNumber = userDto.getPhoneNumber();
+            String databasePhoneNumber = databaseUser.get().getPhoneNumber();
+
+            return username.equals(databaseUsername) &&
+                    userId == databaseUserId &&
+                    phoneNumber.equals(databasePhoneNumber);
+        } else {
+            return false;
+        }
+    }
+
+    @Override
     public Optional<User> findByUsername(String username) {
         return userRepository.findByUsername(username);
     }
@@ -87,14 +131,7 @@ public class UserServiceImp implements UserService {
     }
 
     @Override
-    public User updateUser(UserDto userDto) throws UserNotFound, DuplicatedUser {
-        User user = Convert.DtoToUser(userDto);
-        Optional<User> databaseUser = findByUsername(user.getUsername());
-        if (databaseUser.isPresent()) {
-            user.setPassword(databaseUser.get().getPassword());
-            checkDuplicatedUser(user);
-            return userRepository.save(user);
-        }
-        throw new UserNotFound("User not found");
+    public Optional<User> findById(long id) {
+        return userRepository.findById(id);
     }
 }
