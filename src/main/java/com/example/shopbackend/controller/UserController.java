@@ -1,5 +1,6 @@
 package com.example.shopbackend.controller;
 
+import com.example.shopbackend.dto.OrderDto;
 import com.example.shopbackend.dto.UserDto;
 import com.example.shopbackend.exception.DuplicatedUser;
 import com.example.shopbackend.exception.NotContainRequiredData;
@@ -11,6 +12,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
+import java.util.List;
 import java.util.Optional;
 
 @RestController
@@ -25,7 +27,7 @@ public class UserController {
     public ResponseEntity<UserDto> createUser(@RequestBody UserDto userDto)
             throws NotContainRequiredData, DuplicatedUser {
         User savedUser = userService.createUser(userDto);
-        UserDto result = Convert.UserToDto(savedUser);
+        UserDto result = Convert.userToDto(savedUser);
         return ResponseEntity.ok()
                 .body(result);
     }
@@ -38,7 +40,7 @@ public class UserController {
             User savedUser = userService.updateUser(userDto);
             return ResponseEntity
                     .ok()
-                    .body(Convert.UserToDto(savedUser));
+                    .body(Convert.userToDto(savedUser));
         }
         throw new UserNotFound("User not found");
     }
@@ -47,6 +49,22 @@ public class UserController {
         User user = userService.changeUserPassword(userDto);
         return ResponseEntity
                 .ok()
-                .body(Convert.UserToDto(user));
+                .body(Convert.userToDto(user));
+    }
+
+    @GetMapping("{userid}/order")
+    public ResponseEntity<List<OrderDto>> getOrders(@PathVariable long userid) throws UserNotFound {
+         List<OrderDto> orders = userService.getOrderHistory(userid);
+         return ResponseEntity
+                 .ok()
+                 .body(orders);
+    }
+
+    @DeleteMapping()
+    public ResponseEntity<UserDto> deleteUser(@RequestBody UserDto userDto) throws UserNotFound {
+        UserDto user = userService.deleteUser(userDto);
+        return ResponseEntity
+                .ok()
+                .body(user);
     }
 }

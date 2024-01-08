@@ -1,5 +1,7 @@
 package com.example.shopbackend.dto;
 
+import com.example.shopbackend.model.Refund;
+
 public class OrderDto {
     private long id;
     private int quantity;
@@ -7,6 +9,9 @@ public class OrderDto {
     private String address;
     private String phoneNumber;
     private String status;
+    private Refund refund;
+
+    public OrderDto(){}
 
     public OrderDto(long id, int quantity,
                     double totalPrice, String address,
@@ -17,6 +22,14 @@ public class OrderDto {
         this.address = address;
         this.phoneNumber = phoneNumber;
         this.status = status;
+    }
+
+    public Refund getRefund() {
+        return refund;
+    }
+
+    public void setRefund(Refund refund) {
+        this.refund = refund;
     }
 
     public void setId(long id) {

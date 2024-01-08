@@ -1,9 +1,10 @@
 package com.example.shopbackend.service.imp;
 
+import com.example.shopbackend.dto.OrderDto;
 import com.example.shopbackend.dto.UserDto;
 import com.example.shopbackend.exception.DuplicatedUser;
 import com.example.shopbackend.exception.UserNotFound;
-import com.example.shopbackend.model.Cart;
+import com.example.shopbackend.model.Order;
 import com.example.shopbackend.model.User;
 import com.example.shopbackend.repository.UserRepository;
 import com.example.shopbackend.service.UserService;
@@ -32,7 +33,7 @@ public class UserServiceImp implements UserService {
 
     @Override
     public User createUser(UserDto userDto) throws DuplicatedUser {
-        User user = Convert.DtoToUser(userDto);
+        User user = Convert.dtoToUser(userDto);
         user.encryptPassword();
         user.createCart();
         checkDuplicatedUser(user);
@@ -69,7 +70,7 @@ public class UserServiceImp implements UserService {
 
     @Override
     public User updateUser(UserDto userDto) throws UserNotFound, DuplicatedUser {
-        User user = Convert.DtoToUser(userDto);
+        User user = Convert.dtoToUser(userDto);
         Optional<User> databaseUser = findByUsername(user.getUsername());
         if (databaseUser.isPresent()) {
             user.setPassword(databaseUser.get().getPassword());
@@ -93,7 +94,7 @@ public class UserServiceImp implements UserService {
         throw new UserNotFound("User not found");
     }
 
-    public boolean isEqualWithDatabaseUser(UserDto userDto) {
+    public boolean isEqualWithDatabaseUser(UserDto userDto) throws UserNotFound {
         Optional<User> databaseUser = userRepository.findByUsername(userDto.getUsername());
         if (databaseUser.isPresent()) {
             String username = userDto.getUsername();
@@ -107,8 +108,28 @@ public class UserServiceImp implements UserService {
                     userId == databaseUserId &&
                     phoneNumber.equals(databasePhoneNumber);
         } else {
-            return false;
+            throw new UserNotFound("User Not Found");
         }
+    }
+
+    public List<OrderDto> getOrderHistory(long userid) throws UserNotFound {
+        Optional<User> user = userRepository.findById(userid);
+        if (user.isPresent()) {
+            List<Order> orders = user.get().getOrders();
+            List<OrderDto> orderDtos = new ArrayList<>();
+            for (Order order : orders) {
+                orderDtos.add(Convert.orderToDto(order));
+            }
+            return orderDtos;
+        }
+        throw new UserNotFound("User Not Found");
+    }
+
+    public UserDto deleteUser(UserDto userDto) throws UserNotFound {
+        if (isEqualWithDatabaseUser(userDto)) {
+
+        }
+        throw new UserNotFound("User Not Found");
     }
 
     @Override
