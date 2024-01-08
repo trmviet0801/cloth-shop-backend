@@ -24,7 +24,7 @@ public class UserController {
     @PostMapping
     public ResponseEntity<UserDto> createUser(@RequestBody UserDto userDto)
             throws NotContainRequiredData, DuplicatedUser {
-        User savedUser = userService.checkDuplicateSaveUser(userDto);
+        User savedUser = userService.createUser(userDto);
         UserDto result = Convert.UserToDto(savedUser);
         return ResponseEntity.ok()
                 .body(result);

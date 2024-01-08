@@ -3,6 +3,7 @@ package com.example.shopbackend.service.imp;
 import com.example.shopbackend.dto.UserDto;
 import com.example.shopbackend.exception.DuplicatedUser;
 import com.example.shopbackend.exception.UserNotFound;
+import com.example.shopbackend.model.Cart;
 import com.example.shopbackend.model.User;
 import com.example.shopbackend.repository.UserRepository;
 import com.example.shopbackend.service.UserService;
@@ -24,25 +25,20 @@ public class UserServiceImp implements UserService {
         this.userRepository = userRepository;
     }
 
-    @Override
-    public User checkDuplicateSaveUser(UserDto userDto) throws DuplicatedUser {
-        User user = Convert.DtoToUser(userDto);
-        user.encryptPassword();
-        checkDuplicatedUser(user);
-        user.setRole(Role.USER.name());
-        return userRepository.save(user);
-    }
-
     @Bean
     public PasswordEncoder encoder() {
         return new BCryptPasswordEncoder();
     }
 
-    public User encryptPassword(User user) {
-        user.setPassword("{bcrypt}" + encoder().encode(user.getPassword()));
-        return user;
+    @Override
+    public User createUser(UserDto userDto) throws DuplicatedUser {
+        User user = Convert.DtoToUser(userDto);
+        user.encryptPassword();
+        user.createCart();
+        checkDuplicatedUser(user);
+        user.setRole(Role.USER.name());
+        return userRepository.save(user);
     }
-
 
     public void checkDuplicatedUser(User user) throws DuplicatedUser {
         String username = user.getUsername();

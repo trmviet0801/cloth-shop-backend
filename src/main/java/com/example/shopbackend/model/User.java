@@ -52,6 +52,12 @@ public class User {
                 email);
     }
 
+    public void createCart() {
+        Cart newCart = new Cart();
+        this.setCart(newCart);
+        newCart.setUser(this);
+    }
+
     public void encryptPassword() {
         setPassword("{bcrypt}" + encoder().encode(getPassword()));
     }
