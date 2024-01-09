@@ -38,4 +38,12 @@ public class ProductServiceImp implements ProductService {
     public Product addProduct(Product product) {
         return productRepository.save(product);
     }
+
+    @Override
+    public Product editProduct(Product product) throws ProductNotFound {
+        if (productRepository.existsById(product.getId())) {
+            return productRepository.save(product);
+        }
+        throw new ProductNotFound("Product Not Found");
+    }
 }

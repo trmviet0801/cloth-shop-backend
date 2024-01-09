@@ -19,4 +19,6 @@ public interface UserService {
     User changeUserPassword(UserDto userDto) throws UserNotFound;
     List<OrderDto> getOrderHistory(long userid) throws UserNotFound;
     UserDto addProductToCart(long productId, UserDto userDto) throws UserNotFound, ProductNotFound, InvalidUser;
+
+    UserDto removeProductFromCart(UserDto userDto, long productId) throws UserNotFound, ProductNotFound;
 }

@@ -66,4 +66,12 @@ public class UserController {
         System.out.println(result);
         return ResponseEntity.ok().body(result);
     }
+
+    @DeleteMapping("cart/{productId}")
+    public ResponseEntity<UserDto> removeProductFromCart(@RequestBody UserDto userDto,
+                                                         @PathVariable long productId) throws
+            UserNotFound, ProductNotFound{
+        UserDto result = userService.removeProductFromCart(userDto, productId);
+        return ResponseEntity.ok().body(result);
+    }
 }

@@ -80,7 +80,7 @@ public class Convert {
         return cart;
     }
 
-    public static ProductDto productToTdt(Product product ) {
+    public static ProductDto productToDto(Product product ) {
         ProductDto productDto = new ProductDto();
         productDto.setId(product.getId());
         productDto.setName(product.getName());

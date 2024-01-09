@@ -10,7 +10,6 @@ import com.example.shopbackend.model.Cart;
 import com.example.shopbackend.model.Order;
 import com.example.shopbackend.model.Product;
 import com.example.shopbackend.model.User;
-import com.example.shopbackend.repository.ProductRepository;
 import com.example.shopbackend.repository.UserRepository;
 import com.example.shopbackend.service.CartService;
 import com.example.shopbackend.service.ProductService;
@@ -145,12 +144,13 @@ public class UserServiceImp implements UserService {
             Optional<User> user = userRepository.findById(userDto.getId());
             if (user.isPresent()) {
                 Product product = productService.getProduct(productId);
-                Cart userCart = user.get().getCart();
-                updateCart(userCart, product);
                 List<Cart> productCart = product.getCarts();
+                Cart userCart = user.get().getCart();
+                List<Product> products;
+                increaseCart(userCart, product);
                 productCart.add(userCart);
                 product.setCarts(productCart);
-                List<Product> products = user.get().getCart().getProducts();
+                products = user.get().getCart().getProducts();
                 products.add(product);
                 user.get().getCart().setProducts(products);
 
@@ -160,10 +160,45 @@ public class UserServiceImp implements UserService {
         throw new InvalidUser("Invalid user");
     }
 
-    public void updateCart(Cart cart, Product product) {
+    public UserDto removeProductFromCart(UserDto userDto, long productId) throws UserNotFound, ProductNotFound {
+        if (isEqualWithDatabaseUser(userDto)) {
+            User user = getUser(userDto.getId());
+            Product product = productService.getProduct(productId);
+            Cart cart = user.getCart();
+            decreaseCart(cart, product);
+            cartService.saveCart(cart);
+            user.setCart(cart);
+            return Convert.userToDto(userRepository.save(user));
+        } else {
+            throw new UserNotFound("User Not Found");
+        }
+    }
+
+    public User getUser(long userid) throws UserNotFound {
+        Optional<User> user = userRepository.findById(userid);
+        if (user.isPresent()) {
+            return user.get();
+        }
+        throw new UserNotFound("User Not Found");
+    }
+
+    public void increaseCart(Cart cart, Product product) {
         cart.setQuantity(cart.getQuantity() + 1);
         cart.setTotalPrice(cart.getTotalPrice() + product.getPrice());
         product.setQuantity(product.getQuantity() - 1);
+    }
+
+    public void decreaseCart(Cart cart, Product product) {
+        List<Product> products = cart.getProducts();
+        List<Cart> carts = product.getCarts();
+        if (carts.contains(product)) {
+            products.remove(product);
+            carts.remove(cart);
+            cart.setProducts(products);
+            cart.setQuantity(cart.getQuantity() - 1);
+            cart.setTotalPrice(cart.getTotalPrice() - product.getPrice());
+            product.setQuantity(product.getQuantity() + 1);
+        }
     }
 
     @Override
