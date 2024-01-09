@@ -26,6 +26,10 @@ public class Cart {
         this.user = user;
     }
 
+    public void setId(long id) {
+        this.id = id;
+    }
+
     public void addProduct(Product product) {
         products.add(product);
     }

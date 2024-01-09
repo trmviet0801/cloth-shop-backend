@@ -3,10 +3,14 @@ package com.example.shopbackend.service.imp;
 import com.example.shopbackend.dto.OrderDto;
 import com.example.shopbackend.dto.UserDto;
 import com.example.shopbackend.exception.DuplicatedUser;
+import com.example.shopbackend.exception.ProductNotFound;
 import com.example.shopbackend.exception.UserNotFound;
 import com.example.shopbackend.model.Order;
+import com.example.shopbackend.model.Product;
 import com.example.shopbackend.model.User;
+import com.example.shopbackend.repository.ProductRepository;
 import com.example.shopbackend.repository.UserRepository;
+import com.example.shopbackend.service.ProductService;
 import com.example.shopbackend.service.UserService;
 import com.example.shopbackend.util.Convert;
 import com.example.shopbackend.util.Role;
@@ -21,9 +25,11 @@ import java.util.*;
 @Service
 public class UserServiceImp implements UserService {
     private final UserRepository userRepository;
+    private final ProductService productService;
     @Autowired
-    public UserServiceImp(UserRepository userRepository) {
+    public UserServiceImp(UserRepository userRepository, ProductService productService) {
         this.userRepository = userRepository;
+        this.productService = productService;
     }
 
     @Bean
@@ -125,11 +131,18 @@ public class UserServiceImp implements UserService {
         throw new UserNotFound("User Not Found");
     }
 
-    public UserDto deleteUser(UserDto userDto) throws UserNotFound {
+    public UserDto addProductToCart(long productId, UserDto userDto) throws UserNotFound, ProductNotFound {
         if (isEqualWithDatabaseUser(userDto)) {
-
+            Optional<User> user = userRepository.findById(userDto.getId());
+            if (user.isPresent()) {
+                Product product = productService.getProduct(productId);
+                List<Product> products = user.get().getCart().getProducts();
+                products.add(product);
+                user.get().getCart().setProducts(products);
+                return Convert.userToDto(user.get());
+            }
         }
-        throw new UserNotFound("User Not Found");
+        return null;
     }
 
     @Override

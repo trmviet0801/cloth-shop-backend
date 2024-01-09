@@ -1,7 +1,9 @@
 package com.example.shopbackend.util;
 
+import com.example.shopbackend.dto.CartDto;
 import com.example.shopbackend.dto.OrderDto;
 import com.example.shopbackend.dto.UserDto;
+import com.example.shopbackend.model.Cart;
 import com.example.shopbackend.model.Order;
 import com.example.shopbackend.model.User;
 
@@ -56,5 +58,23 @@ public class Convert {
         orderDto.setQuantity(order.getQuantity());
         orderDto.setRefund(order.getRefund());
         return orderDto;
+    }
+
+    public static CartDto cartToDto(Cart cart) {
+        CartDto cartDto = new CartDto();
+        cartDto.setId(cart.getId());
+        cartDto.setQuantity(cart.getQuantity());
+        cartDto.setTotalPrice(cart.getTotalPrice());
+        cartDto.setProducts(cart.getProducts());
+        return cartDto;
+    }
+
+    public static Cart dtoToCart(CartDto cartDto) {
+        Cart cart = new Cart();
+        cart.setId(cartDto.getId());
+        cart.setQuantity(cartDto.getQuantity());
+        cart.setTotalPrice(cartDto.getTotalPrice());
+        cart.setProducts(cartDto.getProducts());
+        return cart;
     }
 }

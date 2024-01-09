@@ -10,6 +10,8 @@ public class CartDto {
     private double totalPrice;
     private List<Product> products;
 
+    public CartDto(){}
+
     public CartDto(long id, int quantity, double totalPrice, List<Product> products) {
         this.id = id;
         this.quantity = quantity;
