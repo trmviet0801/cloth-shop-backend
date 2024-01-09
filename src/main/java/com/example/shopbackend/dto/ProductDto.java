@@ -1,5 +1,7 @@
 package com.example.shopbackend.dto;
 
+import com.example.shopbackend.model.Category;
+
 public class ProductDto {
     private long id;
     private String name;
@@ -7,13 +9,15 @@ public class ProductDto {
     private double price;
     private int quantity;
     private int totalView;
-    private CategoryDto categoryDto;
+    private Category category;
+
+    public ProductDto(){};
 
     public ProductDto(
             long id, String name,
             String description, double price,
             int quantity, int totalView,
-            CategoryDto categoryDto
+            Category category
     ) {
         this.id = id;
         this.name = name;
@@ -21,7 +25,7 @@ public class ProductDto {
         this.price = price;
         this.quantity = quantity;
         this.totalView = totalView;
-        this.categoryDto = categoryDto;
+        this.category = category;
     }
 
     public void setId(long id) {
@@ -48,8 +52,8 @@ public class ProductDto {
         this.totalView = totalView;
     }
 
-    public void setCategoryDto(CategoryDto categoryDto) {
-        this.categoryDto = categoryDto;
+    public void setCategory(Category category) {
+        this.category = category;
     }
 
     public long getId() {
@@ -76,7 +80,7 @@ public class ProductDto {
         return totalView;
     }
 
-    public CategoryDto getCategoryDto() {
-        return categoryDto;
+    public Category getCategory() {
+        return category;
     }
 }

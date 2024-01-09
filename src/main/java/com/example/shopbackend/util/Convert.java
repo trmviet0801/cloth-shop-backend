@@ -2,9 +2,11 @@ package com.example.shopbackend.util;
 
 import com.example.shopbackend.dto.CartDto;
 import com.example.shopbackend.dto.OrderDto;
+import com.example.shopbackend.dto.ProductDto;
 import com.example.shopbackend.dto.UserDto;
 import com.example.shopbackend.model.Cart;
 import com.example.shopbackend.model.Order;
+import com.example.shopbackend.model.Product;
 import com.example.shopbackend.model.User;
 
 public class Convert {
@@ -76,5 +78,29 @@ public class Convert {
         cart.setTotalPrice(cartDto.getTotalPrice());
         cart.setProducts(cartDto.getProducts());
         return cart;
+    }
+
+    public static ProductDto productToTdt(Product product ) {
+        ProductDto productDto = new ProductDto();
+        productDto.setId(product.getId());
+        productDto.setName(product.getName());
+        productDto.setDescription(product.getDescription());
+        productDto.setPrice(product.getPrice());
+        productDto.setQuantity(product.getQuantity());
+        productDto.setTotalView(product.getTotalView());
+        productDto.setCategory(product.getCategory());
+        return productDto;
+    }
+
+    public static Product dtoToProduct(ProductDto productDto) {
+        Product product = new Product();
+        product.setId(productDto.getId());
+        product.setName(productDto.getName());
+        product.setDescription(productDto.getDescription());
+        product.setPrice(productDto.getPrice());
+        product.setQuantity(productDto.getQuantity());
+        product.setTotalView(productDto.getTotalView());
+        product.setCategory(productDto.getCategory());
+        return product;
     }
 }

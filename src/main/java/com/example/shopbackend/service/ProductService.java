@@ -6,5 +6,5 @@ import com.example.shopbackend.model.Product;
 public interface ProductService {
     boolean isProductAvailable(Product product);
     Product getProduct(long productId) throws ProductNotFound;
-    long saveProduct(Product product);
+    Product addProduct(Product product);
 }

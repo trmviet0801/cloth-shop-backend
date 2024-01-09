@@ -1,8 +1,6 @@
 package com.example.shopbackend.advice;
 
-import com.example.shopbackend.exception.DuplicatedUser;
-import com.example.shopbackend.exception.NotContainRequiredData;
-import com.example.shopbackend.exception.UserNotFound;
+import com.example.shopbackend.exception.*;
 import com.example.shopbackend.model.UserErrorResponse;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
@@ -46,5 +44,22 @@ public class UserExceptionHandler {
         exc.setStatus(HttpStatus.NOT_FOUND);
         exc.setMessage(exception.getMessage());
         return new ResponseEntity<>(exc, HttpStatus.NOT_FOUND);
+    }
+    @ExceptionHandler
+    public ResponseEntity<UserErrorResponse> productNotFoundExceptionHandler(ProductNotFound exception) {
+        UserErrorResponse exc = new UserErrorResponse();
+        exc.setTimestamp(System.currentTimeMillis());
+        exc.setMessage(exception.getMessage());
+        exc.setStatus(HttpStatus.NOT_FOUND);
+        return new ResponseEntity<>(exc, HttpStatus.NOT_FOUND);
+    }
+
+    @ExceptionHandler
+    public ResponseEntity<UserErrorResponse> invalidUserExceptionHandler(InvalidUser exception) {
+        UserErrorResponse exc = new UserErrorResponse();
+        exc.setTimestamp(System.currentTimeMillis());
+        exc.setStatus(HttpStatus.UNAUTHORIZED);
+        exc.setMessage(exception.getMessage());
+        return new ResponseEntity<>(exc, HttpStatus.UNAUTHORIZED);
     }
 }

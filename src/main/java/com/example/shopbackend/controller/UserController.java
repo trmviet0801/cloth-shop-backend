@@ -2,10 +2,7 @@ package com.example.shopbackend.controller;
 
 import com.example.shopbackend.dto.OrderDto;
 import com.example.shopbackend.dto.UserDto;
-import com.example.shopbackend.exception.DuplicatedUser;
-import com.example.shopbackend.exception.NotContainRequiredData;
-import com.example.shopbackend.exception.ProductNotFound;
-import com.example.shopbackend.exception.UserNotFound;
+import com.example.shopbackend.exception.*;
 import com.example.shopbackend.model.User;
 import com.example.shopbackend.service.UserService;
 import com.example.shopbackend.util.Convert;
@@ -61,11 +58,12 @@ public class UserController {
                  .body(orders);
     }
 
-    @PostMapping("{productId}")
+    @PostMapping("/{productId}")
     public ResponseEntity<UserDto> addProductToCart(@PathVariable long productId,
                                                     @RequestBody UserDto userDto)
-            throws UserNotFound, ProductNotFound {
+            throws UserNotFound, ProductNotFound, InvalidUser {
         UserDto result = userService.addProductToCart(productId, userDto);
+        System.out.println(result);
         return ResponseEntity.ok().body(result);
     }
 }

@@ -22,7 +22,7 @@ public class User {
     private String email;
     @Column(name = "phone_number", unique = true)
     private String phoneNumber;
-    @OneToOne(mappedBy = "user")
+    @OneToOne(mappedBy = "user", cascade = CascadeType.ALL)
     private Cart cart;
     @OneToMany(mappedBy = "user")
     private List<Order> orders;
@@ -52,10 +52,11 @@ public class User {
                 email);
     }
 
-    public void createCart() {
+    public Cart createCart() {
         Cart newCart = new Cart();
         this.setCart(newCart);
         newCart.setUser(this);
+        return newCart;
     }
 
     public void encryptPassword() {

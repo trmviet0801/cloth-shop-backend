@@ -35,6 +35,10 @@ public class Product {
         this.category = category;
     }
 
+    public void setId(long id) {
+        this.id = id;
+    }
+
     public void addCart(Cart cart) {
         carts.add(cart);
     }

@@ -13,7 +13,7 @@ public class Cart {
     private int quantity;
     @Column(name = "total_price")
     private double totalPrice;
-    @ManyToMany(mappedBy = "carts")
+    @ManyToMany(mappedBy = "carts", cascade = CascadeType.ALL)
     List<Product> products;
     @OneToOne
     @JoinColumn(name = "user_id", referencedColumnName = "id")

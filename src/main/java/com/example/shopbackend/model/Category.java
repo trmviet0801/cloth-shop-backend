@@ -2,6 +2,8 @@ package com.example.shopbackend.model;
 
 import jakarta.persistence.*;
 
+import java.util.List;
+
 @Entity
 @Table(name = "category")
 public class Category {
@@ -10,11 +12,25 @@ public class Category {
     private long id;
     private String name;
     private int quantity;
+    @OneToMany(mappedBy = "category")
+    private List<Product> products;
 
     public Category(){}
     public Category(String name, int quantity) {
         this.name = name;
         this.quantity = quantity;
+    }
+
+    public void setId(long id) {
+        this.id = id;
+    }
+
+    public List<Product> getProducts() {
+        return products;
+    }
+
+    public void setProducts(List<Product> products) {
+        this.products = products;
     }
 
     public void setName(String name) {

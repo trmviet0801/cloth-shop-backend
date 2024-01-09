@@ -3,13 +3,16 @@ package com.example.shopbackend.service.imp;
 import com.example.shopbackend.dto.OrderDto;
 import com.example.shopbackend.dto.UserDto;
 import com.example.shopbackend.exception.DuplicatedUser;
+import com.example.shopbackend.exception.InvalidUser;
 import com.example.shopbackend.exception.ProductNotFound;
 import com.example.shopbackend.exception.UserNotFound;
+import com.example.shopbackend.model.Cart;
 import com.example.shopbackend.model.Order;
 import com.example.shopbackend.model.Product;
 import com.example.shopbackend.model.User;
 import com.example.shopbackend.repository.ProductRepository;
 import com.example.shopbackend.repository.UserRepository;
+import com.example.shopbackend.service.CartService;
 import com.example.shopbackend.service.ProductService;
 import com.example.shopbackend.service.UserService;
 import com.example.shopbackend.util.Convert;
@@ -26,10 +29,14 @@ import java.util.*;
 public class UserServiceImp implements UserService {
     private final UserRepository userRepository;
     private final ProductService productService;
+    private final CartService cartService;
     @Autowired
-    public UserServiceImp(UserRepository userRepository, ProductService productService) {
+    public UserServiceImp(UserRepository userRepository,
+                          ProductService productService,
+                          CartService cartService) {
         this.userRepository = userRepository;
         this.productService = productService;
+        this.cartService = cartService;
     }
 
     @Bean
@@ -131,18 +138,32 @@ public class UserServiceImp implements UserService {
         throw new UserNotFound("User Not Found");
     }
 
-    public UserDto addProductToCart(long productId, UserDto userDto) throws UserNotFound, ProductNotFound {
+    public UserDto addProductToCart(long productId, UserDto userDto) throws UserNotFound,
+            ProductNotFound,
+            InvalidUser {
         if (isEqualWithDatabaseUser(userDto)) {
             Optional<User> user = userRepository.findById(userDto.getId());
             if (user.isPresent()) {
                 Product product = productService.getProduct(productId);
+                Cart userCart = user.get().getCart();
+                updateCart(userCart, product);
+                List<Cart> productCart = product.getCarts();
+                productCart.add(userCart);
+                product.setCarts(productCart);
                 List<Product> products = user.get().getCart().getProducts();
                 products.add(product);
                 user.get().getCart().setProducts(products);
-                return Convert.userToDto(user.get());
+
+                return Convert.userToDto(userRepository.save(user.get()));
             }
         }
-        return null;
+        throw new InvalidUser("Invalid user");
+    }
+
+    public void updateCart(Cart cart, Product product) {
+        cart.setQuantity(cart.getQuantity() + 1);
+        cart.setTotalPrice(cart.getTotalPrice() + product.getPrice());
+        product.setQuantity(product.getQuantity() - 1);
     }
 
     @Override
