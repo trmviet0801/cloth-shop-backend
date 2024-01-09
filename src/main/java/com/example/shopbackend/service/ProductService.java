@@ -9,4 +9,5 @@ public interface ProductService {
     Product getProduct(long productId) throws ProductNotFound;
     Product addProduct(Product product);
     Product editProduct(Product product) throws ProductNotFound;
+    void deleteProduct(long productId);
 }

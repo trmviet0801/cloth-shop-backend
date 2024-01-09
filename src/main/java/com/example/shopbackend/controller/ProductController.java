@@ -18,14 +18,20 @@ public class ProductController {
     }
 
     @PostMapping()
-    public ResponseEntity<Product> addProduct(@RequestBody ProductDto productDto) {
+    public ResponseEntity<ProductDto> addProduct(@RequestBody ProductDto productDto) {
         Product product = productService.addProduct(Convert.dtoToProduct(productDto));
-        return ResponseEntity.ok().body(product);
+        return ResponseEntity.ok().body(Convert.productToDto(product));
     }
 
     @PutMapping("{productId}")
     public ResponseEntity<ProductDto> editProduct(@RequestBody ProductDto productDto) throws ProductNotFound {
         Product product = productService.editProduct(Convert.dtoToProduct(productDto));
         return  ResponseEntity.ok().body(Convert.productToDto(product));
+    }
+
+    @DeleteMapping("{productId}")
+    public ResponseEntity<Long> deleteProduct(@PathVariable long productId) {
+        productService.deleteProduct(productId);
+        return ResponseEntity.ok().body(productId);
     }
 }

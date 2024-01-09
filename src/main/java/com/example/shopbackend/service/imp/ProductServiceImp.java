@@ -46,4 +46,9 @@ public class ProductServiceImp implements ProductService {
         }
         throw new ProductNotFound("Product Not Found");
     }
+
+    @Override
+    public void deleteProduct(long productId) {
+        productRepository.deleteById(productId);
+    }
 }
