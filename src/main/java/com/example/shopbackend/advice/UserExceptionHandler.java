@@ -11,15 +11,6 @@ import org.springframework.web.bind.annotation.ExceptionHandler;
 @ControllerAdvice
 public class UserExceptionHandler {
     @ExceptionHandler
-    public ResponseEntity<UserErrorResponse> handlerUserException(NotContainRequiredData exception) {
-        UserErrorResponse err = new UserErrorResponse();
-        err.setMessage(exception.getMessage());
-        err.setStatus(HttpStatus.BAD_REQUEST);
-        err.setTimestamp(System.currentTimeMillis());
-        return new ResponseEntity<>(err, HttpStatus.BAD_REQUEST);
-    }
-
-    @ExceptionHandler
     public ResponseEntity<UserErrorResponse> duplicatedUserExceptionHandler(DuplicatedUser exception) {
         UserErrorResponse exc = new UserErrorResponse();
         exc.setMessage(exception.getMessage());
@@ -45,14 +36,6 @@ public class UserExceptionHandler {
         exc.setMessage(exception.getMessage());
         return new ResponseEntity<>(exc, HttpStatus.NOT_FOUND);
     }
-    @ExceptionHandler
-    public ResponseEntity<UserErrorResponse> productNotFoundExceptionHandler(ProductNotFound exception) {
-        UserErrorResponse exc = new UserErrorResponse();
-        exc.setTimestamp(System.currentTimeMillis());
-        exc.setMessage(exception.getMessage());
-        exc.setStatus(HttpStatus.NOT_FOUND);
-        return new ResponseEntity<>(exc, HttpStatus.NOT_FOUND);
-    }
 
     @ExceptionHandler
     public ResponseEntity<UserErrorResponse> invalidUserExceptionHandler(InvalidUser exception) {
@@ -61,5 +44,14 @@ public class UserExceptionHandler {
         exc.setStatus(HttpStatus.UNAUTHORIZED);
         exc.setMessage(exception.getMessage());
         return new ResponseEntity<>(exc, HttpStatus.UNAUTHORIZED);
+    }
+
+    @ExceptionHandler
+    public ResponseEntity<UserErrorResponse> userExceptionHandler(NotContainRequiredData exception) {
+        UserErrorResponse err = new UserErrorResponse();
+        err.setMessage(exception.getMessage());
+        err.setStatus(HttpStatus.BAD_REQUEST);
+        err.setTimestamp(System.currentTimeMillis());
+        return new ResponseEntity<>(err, HttpStatus.BAD_REQUEST);
     }
 }
